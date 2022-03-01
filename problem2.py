@@ -1,6 +1,7 @@
 # %%
 from sklearn.datasets import load_boston
 from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error
 # %%
 X, y = load_boston(return_X_y=True)
 NUM_TST = 101
@@ -15,5 +16,9 @@ tst_y = y[-NUM_TST:]
 #  (you will see this example in the class):
 # %%
 clf = LinearRegression().fit(trn_X[:, 0], trn_y)
-
+pred_y = clf.predict(trn_X[:, 0])
+mse = mean_squared_error(trn_y, pred_y)
+print('MSE', mse)
+# %%
+print(trn_X[:, 0])
 # %%
