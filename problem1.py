@@ -1,4 +1,24 @@
-# %%
+# File Name:  problem1.py
+# Author:     Stephen Campbell, Alexandra Danhof, Kristi Doleh
+# NetID:      sac170630, and170130, kxd170004
+# Team:       ML Group 4
+# Date:       03/03/2022
+# Version:    Python 3.9
+#
+# Copyright:  2022, All Rights Reserved
+#
+# Description:
+#    Written for ML Group 4 Homework 1 Problem 1.
+#    This file reads in a dataset for Wisconson Breast
+#    Cancer and divides into training, test, and validation sets.
+#    A Logistical Regression (LogReg) model is created to perform binary
+#    classification on the dataset. The program then repeat this
+#    process using an SVM classifier with both linear and gaussian
+#    kernels.
+#
+
+
+# import all necessary files
 from sklearn import svm
 from sklearn.datasets import load_breast_cancer
 from sklearn.linear_model import LogisticRegression
@@ -7,34 +27,29 @@ from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
-
-
 from util import save_fig_to_images
-# %%
+
+
+# load necessary data for dataset into training and
+# test sets
 X, y = load_breast_cancer(return_X_y=True)
 X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
 
-# %% [markdown]
-#  (i)
-# Create a Logistic Regression (LogReg) model using all the features to perform
-# binary classification # on this dataset.
 
-# Use the code in the notebook file on eLearning for Logistic Regression as a hint.
-
-# Split the data into training and test sets and use the training set to train
-# your model.
-
-# Print the recall and precision values on test the test set. Use the test set to plot confusion matrix as well.
-# (hint: SVM example on eLearning)
-# %%
-
-
+#
+# Function Name: part_i
+# Description: Function creating LogReg model to
+# perform binary classification and print the
+# recall/precision values and confusion matrix.
+# Inputs: clf and name of model
+# Outputs: recall/precision values and confusion matrix
+#
 def part_i(clf, model_name):
     pipe = make_pipeline(StandardScaler(), clf)
     pipe.fit(X_train, y_train)
     y_test_pred = pipe.predict(X_test)
     test_precision, tst_recall, _, _ = precision_recall_fscore_support(
-        y_test, y_test_pred, labels=pipe.classes_)
+        y_test, y_test_pred, labels=pipe.classes_, average='binary')
 
     print(model_name)
     print('labels', pipe.classes_)
@@ -51,13 +66,19 @@ def part_i(clf, model_name):
     save_fig_to_images(f'ConfusionMatrix-{model_name}.png')
 
 
+# function call to get results from part 1
 part_i(LogisticRegression(), 'Logistic Regression')
 
-# %% [markdown]
-# (ii) Create 30 LogReg models by incrementally changing the number of features.
-# %%
 
-
+#
+# Function Name: part_ii
+# Description: Function creating 30 LogReg model
+# by incrementally changing the number of features.
+# Then plotting the recall vs features & precision vs
+# features plots.
+# Inputs: clf and name of model
+# Outputs: plots for recall vs features and precision vs features
+#
 def part_ii(clf, model_name):
     precisions = []
     recalls = []
@@ -86,20 +107,20 @@ def part_ii(clf, model_name):
     save_fig_to_images(f'MetricVsFeatures-{model_name}.png')
 
 
+# function call to get results from part 2
 part_ii(LogisticRegression(), 'Logistic Regression')
-# %%
 
-# %% [markdown]
 
 # (iii) Repeat (i) and (ii) using an SVM classifier with linear kernel
-# %%
+
+# call both part 1 and part 2 with linear kernel
 part_i(svm.SVC(kernel='linear'), 'SVM - Linear Kernel')
 part_ii(svm.SVC(kernel='linear'), 'SVM - Linear Kernel')
 # %%
 
-# %% [markdown]
+
 # (iv) Repeat (i) and (ii) using an SVM classifier with gaussian kernel
 
+# call both part 1 and part 2 with linear kernel
 part_i(svm.SVC(kernel='rbf'), 'SVM - Gaussian Kernel')
 part_ii(svm.SVC(kernel='rbf'), 'SVM - Gaussian Kernel')
-# %%
